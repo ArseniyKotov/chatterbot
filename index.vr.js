@@ -70,7 +70,7 @@ class Basics extends Component {
       this.setState({
         keyboardText: this.state.keyboardText.substring(0,this.state.keyboardText.length - 1)
       });
-    } else if (e.nativeEvent.inputEvent.key === 'Enter') {
+    } else if (e.nativeEvent.inputEvent.key === 'Enter' || e.nativeEvent.inputEvent.key === 'ArrowRight') {
       this.setState({
         entryText: '',
         entry: false
