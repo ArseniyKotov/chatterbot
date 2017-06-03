@@ -47,20 +47,54 @@ class Basics extends Component {
       pizzaCode: '',
       toppings: [],
       playSound: true,
-      robotTyping: false,
+      robotTyping: true,
       showTracker: false,
       entry: true
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     var me = this;
-    axios.get('/api/startup').then(function(response) {
-      setTimeout(()=>me.setState({
-        entryText: response.data.text,
-        context: response.data.nextContext,
-      }), 2500);
-    });
+    var urlMessage = '?message=' + 'ok' + '&context=' + 'totalPizzas';
+    axios.get(`/api/response${urlMessage}`).then(function (response) {
+      console.log('TOPPINGS', response.data.toppings);
+      setTimeout(() => {
+        me.setState({
+          robotText: response.data.output,
+          context: response.data.nextContext,
+          playSound: !me.state.playSound,
+          robotTyping: false,
+          entryText: '',
+          messageText: '',
+          entry: false
+        });
+        if (response.data.pizzaCode !== undefined) {
+          me.setState({
+            pizzaCode: response.data.pizzaCode
+          });
+        }
+        if (response.data.toppings !== undefined) {
+          me.setState({
+            robotText: response.data.output,
+            context: response.data.nextContext,
+            robotTyping: false
+          });
+        }
+        if (response.data.pizzaCode !== undefined) {
+          me.setState({
+            pizzaCode: response.data.pizzaCode,
+            robotTyping: false
+          });
+        }
+        if (response.data.toppings !== undefined) {
+          me.setState({
+            toppings: response.data.toppings,
+            robotTyping: false
+          });
+        }
+      }, 2000);
+    }
+    );
   }
 
   handleInput(e){
